@@ -1,5 +1,5 @@
 {
-  "LISTENING_PORT": process.env.PORT,
+  "LISTENING_PORT": process.env.PORT || 80,
   "prefix": "!",
   "token": "NTMxNzI2OTgyNTE0MzQzOTM4.DxTHkg.s0So7-NLUuOlPh96Xy2nyI43ibI"
 }
