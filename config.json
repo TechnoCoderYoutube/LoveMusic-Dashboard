@@ -1,5 +1,5 @@
 {
   "LISTENING_PORT": 3000,
   "prefix": "!",
-  "token": process.env.BOT_TOKEN
+  "token": DONT BE A SNEAKY!
 }
