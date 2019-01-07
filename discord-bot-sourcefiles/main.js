@@ -93,7 +93,8 @@ client.on('message', async(message) => {
         message.channel.sendMessage("This is the test command for something you want to test (I think)!");
     }
 
-
+}
+	  });
     client.on('message', msg => {
   console.log('LOG: S: ' + msg.guild.name + ' M: ' + msg.content + ' Y: ' + msg.author.tag);
   if (msg.author.id === ayarlar.id) return;
