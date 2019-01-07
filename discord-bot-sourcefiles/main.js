@@ -116,11 +116,11 @@ client.on('message', async(message) => {
 	msg.reply('New Commands will be added soon: Our website: ');
   }
 
-   var args = msg.content.substring(config.prefix.length).split(" ")
+   var args1 = msg.content.substring(config.prefix.length).split(" ")
   switch (args[0].toLowerCase()) {
 
   case "play":
-   if (!args[1]) {
+   if (!args1[1]) {
      msg.channel.sendMessage(":satellite: Please provide a link");
  return;
    }
@@ -135,7 +135,7 @@ client.on('message', async(message) => {
 
    var server= servers[msg.guild.id];
 
-   server.queue.push(args[1]);
+   server.queue.push(args1[1]);
 
    if (!msg.guild.voiceConnection) msg.member.voiceChannel.join().then(function(connection){
 play(connection, msg);
