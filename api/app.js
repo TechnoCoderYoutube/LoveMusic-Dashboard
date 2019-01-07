@@ -8,6 +8,7 @@ const fs = require("fs");
 const bodyParser = require('body-parser');
 const now = require("performance-now");
 const commands = require("./../discord-bot-sourcefiles/bot-commands.json");
+var port = process.env.PORT || 3000;
 
 const chalk = require('chalk');
 const ctx = new chalk.constructor({level: 3});
@@ -172,7 +173,7 @@ exports.startApp = function (/**Object*/ client) {
     // You can look inside the repository of chalk to understand how it works and how to use it.
     // Repository: https://goo.gl/qfQ4Pv
 
-    app.listen(config.LISTENING_PORT, function () {
+    app.listen(port, function () {
         console.log(chalk.cyanBright('>> Dashboard is online and running on port ' + config.LISTENING_PORT + '!\n'));
     });
 
