@@ -78,7 +78,6 @@ client.on('message', async(message) => {
             "log_type": "info",
             "log_message": "Command help executed!",
             "log_date": Date.now(),
-            "log_action": command "help executed"
         });
         message.channel.sendMessage("This is the help command!");
     }
