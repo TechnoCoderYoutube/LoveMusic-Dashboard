@@ -107,7 +107,7 @@ client.on('message', async(message) => {
         }
     }
 
-}
+});
   if (msg.content.toLowerCase() === prefix + 'testconnection') {
     msg.reply('connectiontested!');
   }
