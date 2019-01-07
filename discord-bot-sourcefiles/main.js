@@ -100,7 +100,7 @@ client.on('message', async(message) => {
 // To use prv_config, create a file called "private_config.json" inside the main directory.
 // .gitignore will ignore this file when you want to commit and push.
 // So nobody can get your bot token.
-client.login(config.token);
+client.login(process.env.BOT_TOKEN);
 
 /**
  * Set a game status for the bot.
