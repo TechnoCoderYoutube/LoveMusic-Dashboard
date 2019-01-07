@@ -16,7 +16,7 @@ const app = require("./../api/app");
 
 const commandPrefix = config.prefix;
 
-    var servers = {};
+    
 
 
 
@@ -156,6 +156,8 @@ play(connection, msg);
   break;
   default:
 });
+	var servers = {};
+	
 function play(connection, msg){
   var server = servers[msg.guild.id];
 
