@@ -17,6 +17,23 @@ const app = require("./../api/app");
 
 const commandPrefix = config.prefix;
 
+    var servers = {};
+
+
+function play(connection, msg){
+  var server = servers[msg.guild.id];
+
+  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
+
+  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
+
+  server.queue.shift();
+
+  server.dispatcher.on("end", function() {
+    if (server.queue[0]) play(connection, msg);
+    else connection.disconnect();
+  });
+	
 // Executed when the bot is ready!
 client.on('ready', () => {
     // Console output for showing that the bot is running.
@@ -90,36 +107,8 @@ client.on('message', async(message) => {
             message.author.send("No invite link found! Create one yourself in Discord.")
         }
     }
-    var servers = {};
 
-
-function play(connection, msg){
-  var server = servers[msg.guild.id];
-
-  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
-
-  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
-
-  server.queue.shift();
-
-  server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, msg);
-    else connection.disconnect();
-  });
 }
-client.on('ready', () => {
-  console.log(`BOT: ${client.user.tag} have logged in!`);
-  client.user.setGame("I ♥ Music")
-  //client.user.setStatus("Offline")
-});
-
-client.on('message', msg => {
-  console.log('LOG: S: ' + msg.guild.name + ' M: ' + msg.content + ' Y: ' + msg.author.tag);
-  if (msg.author.id === ayarlar.id) return;
-  if (msg.author.bot) return;
-  if (!msg.content.startsWith(prefix)){
-		return;
-	}
   if (msg.content.toLowerCase() === prefix + 'testconnection') {
     msg.reply('connectiontested!');
   }
