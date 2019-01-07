@@ -6,8 +6,7 @@ const client = new Discord.Client();
 const config = require("../config.json");
 const botDataJson = require("./../botData.json");
 const botCommands = require("./bot-commands.json");
-// Delete this line when you're using this project for public usages.
-const prv_config = require("../private_config.json");
+
 const now = require("performance-now");
 
 
