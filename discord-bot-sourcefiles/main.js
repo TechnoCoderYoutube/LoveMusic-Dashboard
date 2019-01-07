@@ -7,7 +7,6 @@ const config = require("../config.json");
 const botDataJson = require("./../botData.json");
 const botCommands = require("./bot-commands.json");
 const YTDL = require("ytdl-core");
-const fs = require("fs")
 const now = require("performance-now");
 
 
