@@ -108,13 +108,13 @@ client.on('message', async(message) => {
     }
 
 
-  if (msg.content === 'testconnection') {
+  if (command === 'testconnection') {
     msg.reply('connectiontested!');
   }
-  if (msg.content ===  ''){
+  if (command ===  ''){
 
   }
-    if (msg.content === 'help') {
+    if (command === 'help') {
     msg.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
 	msg.reply('New Commands will be added soon: Our website: ');
   }
