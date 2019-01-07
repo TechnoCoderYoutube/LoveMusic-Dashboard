@@ -19,17 +19,17 @@ const commandPrefix = config.prefix;
     var servers = {};
 
 
-function play(connection, message){
-  var server = servers[message.guild.id];
+function play(connection, msg){
+  var server = servers[msg.guild.id];
 
   server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
 
-  message.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
+  msg.channel.sendmsg(':headphones: Song is playing now(or adding to queue)!')
 
   server.queue.shift();
 
   server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, message);
+    if (server.queue[0]) play(connection, msg);
     else connection.disconnect();
   });
 }
@@ -52,43 +52,43 @@ client.on('ready', () => {
 });
 
 // If your code editor says that () => is an error, change it to function()
-// Executed when message event
-client.on('message', async(message) => {
+// Executed when msg event
+client.on('msg', async(msg) => {
     let commands = botCommands;
-    if(message.author.bot) return;
+    if(msg.author.bot) return;
 
-    let sender = message.author;
+    let sender = msg.author;
     let senderUsername = sender.username;
     let senderID = sender.id;
-    let content = message.content;
+    let content = msg.content;
 
-    if(message.channel.type === "dm"){
+    if(msg.channel.type === "dm"){
         let time = Date.now();
         app.dmNotification(senderUsername, content, time);
     }
 
-    if(!message.content.startsWith(commandPrefix)) return;
-    let command = message.content.toLowerCase().split(" ")[0];
+    if(!msg.content.startsWith(commandPrefix)) return;
+    let command = msg.content.toLowerCase().split(" ")[0];
     command = command.slice(commandPrefix.length);
 
-    let args = message.content.split(" ").slice(1);
+    let args = msg.content.split(" ").slice(1);
 
     if(command === "help"){
         app.addLog({
             "log_type": "info",
-            "log_message": "Command help executed!",
+            "log_msg": "Command help executed!",
             "log_date": Date.now(),
         });
-        message.channel.sendMessage("This is the help command!");
+        msg.channel.sendmsg("This is the help command!");
     }
 
     if(command === "test"){
         app.addLog({
             "log_type": "info",
-            "log_message": "Command test executed!",
+            "log_msg": "Command test executed!",
             "log_date": Date.now(),
         });
-        message.channel.sendMessage("This is the test command for something you want to test (I think)!");
+        msg.channel.sendmsg("This is the test command for something you want to test (I think)!");
     }
 	
     if(command === "invites"){
@@ -96,70 +96,70 @@ client.on('message', async(message) => {
             console.log(a.filter(invite => !invite.maxAge).first().toString());
         }); */
         try {
-            const invites = await message.guild.fetchInvites();
-            message.author.send(invites.filter(invite => !invite.maxAge).first().toString());
+            const invites = await msg.guild.fetchInvites();
+            msg.author.send(invites.filter(invite => !invite.maxAge).first().toString());
         } catch(err){
-            message.delete();
-            message.author.send("No invite link found! Create one yourself in Discord.")
+            msg.delete();
+            msg.author.send("No invite link found! Create one yourself in Discord.")
         }
     }
-  if (message.content.toLowerCase() === 'testconnection') {
-    message.reply('connectiontested!');
+  if (msg.content.toLowerCase() === 'testconnection') {
+    msg.reply('connectiontested!');
   }
-  if (message.content.toLowerCase() === ''){
+  if (msg.content.toLowerCase() === ''){
 
   }
-    if (message.content.toLowerCase() === 'help') {
-    message.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
-	message.reply('New Commands will be added soon: Our website: ');
+    if (msg.content.toLowerCase() === 'help') {
+    msg.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
+	msg.reply('New Commands will be added soon: Our website: ');
   }
 
-   var args1 = message.content.substring(config.prefix.length).split(" ")
+   var args1 = msg.content.substring(config.prefix.length).split(" ")
   switch (args[0].toLowerCase()) {
 
   case "play":
    if (!args1[1]) {
-     message.channel.sendMessage(":satellite: Please provide a link");
+     msg.channel.sendmsg(":satellite: Please provide a link");
  return;
    }
-   if(!message.member.voiceChannel){
-     message.channel.sendMessage(":microphone: Please enter a voice channel")
+   if(!msg.member.voiceChannel){
+     msg.channel.sendmsg(":microphone: Please enter a voice channel")
      return;
    }
 
-   if(!servers[message.guild.id]) servers[message.guild.id] = {
+   if(!servers[msg.guild.id]) servers[msg.guild.id] = {
      queue: []
    }
 
-   var server= servers[message.guild.id];
+   var server= servers[msg.guild.id];
 
    server.queue.push(args1[1]);
 
-   if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
-play(connection, message);
+   if (!msg.guild.voiceConnection) msg.member.voiceChannel.join().then(function(connection){
+play(connection, msg);
  });
   break;
   case "skip":
-  message.channel.sendMessage(':track_next: Skipping this song. Going to next song!')
- var server = servers[message.guild.id];
+  msg.channel.sendmsg(':track_next: Skipping this song. Going to next song!')
+ var server = servers[msg.guild.id];
 
  if (server.dispatcher) server.dispatcher.end();
   break;
   case "stop":
-  var server = servers[message.guild.id];
+  var server = servers[msg.guild.id];
 
   if (server.dispatcher) server.dispatcher.disconnect();
    break;
    case "quit":
-   message.channel.sendMessage(':sob: Why did you close ME!!!')
-   var server = servers[message.guild.id];
+   msg.channel.sendmsg(':sob: Why did you close ME!!!')
+   var server = servers[msg.guild.id];
 
    if (server.dispatcher) server.dispatcher.end();
     break;
     case "clear all":
-    var server = servers[message.guild.id];
+    var server = servers[msg.guild.id];
 
-  if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+  if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
   break;
   default:
 
@@ -223,7 +223,7 @@ exports.setGameStatus = function (/**String*/ game,/**boolean*/maintenanceChange
                 setTimeout(() =>{
                     app.addLog({
                         "log_type" : "info",
-                        "log_message" : "Successfully edited botData.json.",
+                        "log_msg" : "Successfully edited botData.json.",
                         "log_date" : Date.now(),
                         "log_action" : "Changed value: game"
                     });
@@ -236,7 +236,7 @@ exports.setGameStatus = function (/**String*/ game,/**boolean*/maintenanceChange
         setTimeout(() =>{
             app.addLog({
                 "log_type" : "info",
-                "log_message" : "Changed game status value",
+                "log_msg" : "Changed game status value",
                 "log_date" : Date.now(),
                 "log_action" : "function call took " + (t1-t0).toFixed(3) + "ms"
             });
@@ -244,7 +244,7 @@ exports.setGameStatus = function (/**String*/ game,/**boolean*/maintenanceChange
         setTimeout(() =>{
             app.addLog({
                 "log_type" : "success",
-                "log_message" : "Successfully changed game status of bot.",
+                "log_msg" : "Successfully changed game status of bot.",
                 "log_date" : Date.now(),
                 "log_action" : "Changed it from " + gameBeforeChanging + " to " + game + "."
             });
@@ -302,18 +302,18 @@ exports.setBotStatus = function (/**String*/ status,/**boolean*/maintenanceChang
 };
 
 /**
- * Writing a message to the administrators of a server. (testing)
+ * Writing a msg to the administrators of a server. (testing)
  *
- * @param message - Message string which will be sent to the administrator.
+ * @param msg - msg string which will be sent to the administrator.
  * @since 0.0.2-beta
  *
  * @public
  */
-exports.sendAdminMessage = function (/**String*/ message) {
+exports.sendAdminmsg = function (/**String*/ msg) {
     let guilds = client.guilds;
 
     guilds.map(function (a) {
-        a.owner.send(message);
+        a.owner.send(msg);
         console.log(">> Bot Action > Server Admin DM sent to: " + a.owner.user.username + " - Server Admin of the server: " + a.name);
         console.log("> Direct invite link to server: currently not available. on development.")
     });
@@ -332,7 +332,7 @@ exports.sendClientObject = (/**Number*/t0) => {
     let t1 = now();
     app.addLog({
         "log_type" : "info",
-        "log_message" : "Output the client object",
+        "log_msg" : "Output the client object",
         "log_date" : Date.now(),
         "log_action" : "function call took " + (t1-t0).toFixed(3) + "ms"
     });
@@ -354,7 +354,7 @@ exports.sendGuildsObject = (/**Number*/t0) => {
     let t1 = now();
     app.addLog({
         "log_type" : "info",
-        "log_message" : "Output the guilds (client.guilds) object",
+        "log_msg" : "Output the guilds (client.guilds) object",
         "log_date" : Date.now(),
         "log_action" : "function call took " + (t1-t0).toFixed(3) + "ms"
     });
@@ -382,7 +382,7 @@ exports.sendInvitesOfServers = function () {
 };
 
 /**
- * Change status from bot to 'dnd' and writes a message to the discord server admins who are using this bot to
+ * Change status from bot to 'dnd' and writes a msg to the discord server admins who are using this bot to
  * get informed about the maintenance (maintenance like for testing new functions etc.) [This function is in a Early status!]
  *
  * @param maintenanceBool - Maintenance status of the bot and the app.
@@ -400,11 +400,11 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
         // Set new values to the bot user
         this.setBotStatus("dnd", true);
         this.setGameStatus("Monkeys are working!", true);
-        this.sendAdminMessage("Hello dear server admin, I'm currently in maintenance mode so don't worry why you may not be able to access all functions. We will inform you when we have finished our problems!");
+        this.sendAdminmsg("Hello dear server admin, I'm currently in maintenance mode so don't worry why you may not be able to access all functions. We will inform you when we have finished our problems!");
 
         app.addLog({
             "log_type" : "info",
-            "log_message" : "Server admins got an message which contains information that maintenance was enabled!",
+            "log_msg" : "Server admins got an msg which contains information that maintenance was enabled!",
             "log_date" : Date.now(),
             "log_action" : ""
         });
@@ -412,7 +412,7 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
         setTimeout(function(){
             app.addLog({
                 "log_type" : "info",
-                "log_message" : "Values of bot client changed!",
+                "log_msg" : "Values of bot client changed!",
                 "log_date" : Date.now(),
                 "log_action" : "Changed values: client.user.localPresence.status , client.user.localPresence.game.name"
             });
@@ -444,7 +444,7 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
                 setTimeout(function() {
                     app.addLog({
                         "log_type": "info",
-                        "log_message": "Values in botData.json changed!",
+                        "log_msg": "Values in botData.json changed!",
                         "log_date": Date.now(),
                         "log_action": "Changed property values: maintenance, status, bot_game"
                     });
@@ -461,14 +461,14 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
         setTimeout(function() {
             app.addLog({
                 "log_type": "maintenance",
-                "log_message": "Maintenance was enabled!",
+                "log_msg": "Maintenance was enabled!",
                 "log_date": Date.now(),
                 "log_action": "Enabling maintenance took " + (t1 - t0).toFixed(3) + "ms"
             });
         }, 100);
 
         console.log("\n>> Bot > Maintenance are now " + chalk.redBright.bold("enabled!"));
-        console.log(">> Bot > Notification Message was sent to server admins.");
+        console.log(">> Bot > Notification msg was sent to server admins.");
 
 
 
@@ -484,7 +484,7 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
         setTimeout(function(){
             app.addLog({
                 "log_type" : "info",
-                "log_message" : "Values of bot client changed!",
+                "log_msg" : "Values of bot client changed!",
                 "log_date" : Date.now(),
                 "log_action" : "Changed values: client.user.localPresence.status , client.user.localPresence.game.name"
             });
@@ -515,7 +515,7 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
                 setTimeout(function() {
                     app.addLog({
                         "log_type": "info",
-                        "log_message": "Values in botData.json changed!",
+                        "log_msg": "Values in botData.json changed!",
                         "log_date": Date.now(),
                         "log_action": "Changed property values: maintenance, status, bot_game"
                     });
@@ -531,7 +531,7 @@ exports.maintenance = function (/**boolean*/ maintenanceBool, /**Number*/t0) {
         setTimeout(function() {
             app.addLog({
                 "log_type": "maintenance",
-                "log_message": "Maintenance was disabled!",
+                "log_msg": "Maintenance was disabled!",
                 "log_date": Date.now(),
                 "log_action": "Disabling maintenance took " + (t1 - t0).toFixed(3) + "ms"
             });
