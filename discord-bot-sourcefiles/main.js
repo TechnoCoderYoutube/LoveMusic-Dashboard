@@ -87,7 +87,6 @@ client.on('message', async(message) => {
             "log_type": "info",
             "log_message": "Command test executed!",
             "log_date": Date.now(),
-            "log_action": command "test executed"
         });
         message.channel.sendMessage("This is the test command for something you want to test (I think)!");
     }
