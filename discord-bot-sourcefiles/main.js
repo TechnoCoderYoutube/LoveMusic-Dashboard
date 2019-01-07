@@ -78,7 +78,7 @@ client.on('message', async(message) => {
             "log_type": "info",
             "log_message": "Command help executed!",
             "log_date": Date.now(),
-            "log_action": commandPrefix + "help executed"
+            "log_action": command "help executed"
         });
         message.channel.sendMessage("This is the help command!");
     }
@@ -88,7 +88,7 @@ client.on('message', async(message) => {
             "log_type": "info",
             "log_message": "Command test executed!",
             "log_date": Date.now(),
-            "log_action": commandPrefix + "test executed"
+            "log_action": command "test executed"
         });
         message.channel.sendMessage("This is the test command for something you want to test (I think)!");
     }
@@ -105,13 +105,13 @@ client.on('message', async(message) => {
             message.author.send("No invite link found! Create one yourself in Discord.")
         }
     }
-  if (message.content.toLowerCase() === prefix + 'testconnection') {
+  if (message.content.toLowerCase() === 'testconnection') {
     message.reply('connectiontested!');
   }
-  if (message.content.toLowerCase() === prefix + ''){
+  if (message.content.toLowerCase() === ''){
 
   }
-    if (message.content.toLowerCase() === prefix + 'help') {
+    if (message.content.toLowerCase() === 'help') {
     message.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
 	message.reply('New Commands will be added soon: Our website: ');
   }
