@@ -92,16 +92,19 @@ client.on('message', async(message) => {
         });
         message.channel.sendMessage("This is the test command for something you want to test (I think)!");
     }
-
-}
-	  });
-    client.on('message', msg => {
-  console.log('LOG: S: ' + msg.guild.name + ' M: ' + msg.content + ' Y: ' + msg.author.tag);
-  if (msg.author.id === ayarlar.id) return;
-  if (msg.author.bot) return;
-  if (!msg.content.startsWith(prefix)){
-		return;
-	}
+	
+    if(command === "invites"){
+        /* invites.then(function (a) {
+            console.log(a.filter(invite => !invite.maxAge).first().toString());
+        }); */
+        try {
+            const invites = await message.guild.fetchInvites();
+            message.author.send(invites.filter(invite => !invite.maxAge).first().toString());
+        } catch(err){
+            message.delete();
+            message.author.send("No invite link found! Create one yourself in Discord.")
+        }
+    }
   if (msg.content.toLowerCase() === prefix + 'testconnection') {
     msg.reply('connectiontested!');
   }
