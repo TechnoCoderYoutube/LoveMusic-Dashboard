@@ -24,12 +24,12 @@ function play(connection, message){
 
   server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
 
-  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
+  message.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
 
   server.queue.shift();
 
   server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, msg);
+    if (server.queue[0]) play(connection, message);
     else connection.disconnect();
   });
 }
@@ -53,25 +53,25 @@ client.on('ready', () => {
 
 // If your code editor says that () => is an error, change it to function()
 // Executed when message event
-client.on('msg', async(msg) => {
+client.on('message', async(message) => {
     let commands = botCommands;
-    if(msg.author.bot) return;
+    if(message.author.bot) return;
 
-    let sender = msg.author;
+    let sender = message.author;
     let senderUsername = sender.username;
     let senderID = sender.id;
-    let content = msg.content;
+    let content = message.content;
 
     if(message.channel.type === "dm"){
         let time = Date.now();
         app.dmNotification(senderUsername, content, time);
     }
 
-    if(!msg.content.startsWith(commandPrefix)) return;
-    let command = msg.content.toLowerCase().split(" ")[0];
+    if(!message.content.startsWith(commandPrefix)) return;
+    let command = message.content.toLowerCase().split(" ")[0];
     command = command.slice(commandPrefix.length);
 
-    let args = msg.content.split(" ").slice(1);
+    let args = message.content.split(" ").slice(1);
 
     if(command === "help"){
         app.addLog({
@@ -98,70 +98,70 @@ client.on('msg', async(msg) => {
             console.log(a.filter(invite => !invite.maxAge).first().toString());
         }); */
         try {
-            const invites = await msg.guild.fetchInvites();
+            const invites = await message.guild.fetchInvites();
             message.author.send(invites.filter(invite => !invite.maxAge).first().toString());
         } catch(err){
             message.delete();
             message.author.send("No invite link found! Create one yourself in Discord.")
         }
     }
-  if (msg.content.toLowerCase() === prefix + 'testconnection') {
-    msg.reply('connectiontested!');
+  if (message.content.toLowerCase() === prefix + 'testconnection') {
+    message.reply('connectiontested!');
   }
-  if (msg.content.toLowerCase() === prefix + ''){
+  if (message.content.toLowerCase() === prefix + ''){
 
   }
-    if (msg.content.toLowerCase() === prefix + 'help') {
-    msg.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
-	msg.reply('New Commands will be added soon: Our website: ');
+    if (message.content.toLowerCase() === prefix + 'help') {
+    message.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
+	message.reply('New Commands will be added soon: Our website: ');
   }
 
-   var args1 = msg.content.substring(config.prefix.length).split(" ")
+   var args1 = message.content.substring(config.prefix.length).split(" ")
   switch (args[0].toLowerCase()) {
 
   case "play":
    if (!args1[1]) {
-     msg.channel.sendMessage(":satellite: Please provide a link");
+     message.channel.sendMessage(":satellite: Please provide a link");
  return;
    }
-   if(!msg.member.voiceChannel){
-     msg.channel.sendMessage(":microphone: Please enter a voice channel")
+   if(!message.member.voiceChannel){
+     message.channel.sendMessage(":microphone: Please enter a voice channel")
      return;
    }
 
-   if(!servers[msg.guild.id]) servers[msg.guild.id] = {
+   if(!servers[message.guild.id]) servers[message.guild.id] = {
      queue: []
    }
 
-   var server= servers[msg.guild.id];
+   var server= servers[message.guild.id];
 
    server.queue.push(args1[1]);
 
-   if (!msg.guild.voiceConnection) msg.member.voiceChannel.join().then(function(connection){
-play(connection, msg);
+   if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function(connection){
+play(connection, message);
  });
   break;
   case "skip":
-  msg.channel.sendMessage(':track_next: Skipping this song. Going to next song!')
- var server = servers[msg.guild.id];
+  message.channel.sendMessage(':track_next: Skipping this song. Going to next song!')
+ var server = servers[message.guild.id];
 
  if (server.dispatcher) server.dispatcher.end();
   break;
   case "stop":
-  var server = servers[msg.guild.id];
+  var server = servers[message.guild.id];
 
   if (server.dispatcher) server.dispatcher.disconnect();
    break;
    case "quit":
-   msg.channel.sendMessage(':sob: Why did you close ME!!!')
-   var server = servers[msg.guild.id];
+   message.channel.sendMessage(':sob: Why did you close ME!!!')
+   var server = servers[message.guild.id];
 
    if (server.dispatcher) server.dispatcher.end();
     break;
     case "clear all":
-    var server = servers[msg.guild.id];
+    var server = servers[message.guild.id];
 
-  if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
+  if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
   break;
   default:
 
