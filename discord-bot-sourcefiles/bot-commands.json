@@ -10,10 +10,4 @@
     "availableInMaintenance":false,
     "sendType": "embed"
   }
-    {
-    "commandName" : "play",
-    "content": ":headphones: Song is playing now(or adding to queue)!",
-    "availableInMaintenance":false,
-    "sendType": "embed"
-  }
 ]
