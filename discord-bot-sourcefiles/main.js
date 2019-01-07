@@ -19,19 +19,7 @@ const commandPrefix = config.prefix;
     var servers = {};
 
 
-function play(connection, msg){
-  var server = servers[msg.guild.id];
 
-  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
-
-  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
-
-  server.queue.shift();
-
-  server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, msg);
-    else connection.disconnect();
-  });
 	
 // Executed when the bot is ready!
 client.on('ready', () => {
@@ -168,7 +156,19 @@ play(connection, msg);
   break;
   default:
 });
+function play(connection, msg){
+  var server = servers[msg.guild.id];
 
+  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
+
+  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
+
+  server.queue.shift();
+
+  server.dispatcher.on("end", function() {
+    if (server.queue[0]) play(connection, msg);
+    else connection.disconnect();
+  });
 // Change it to config.token when you want to use this project for public usages.
 //
 // prv_config is only for personal usage or when youre forking this project,
