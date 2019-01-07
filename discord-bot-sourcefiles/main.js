@@ -16,11 +16,23 @@ const app = require("./../api/app");
 
 const commandPrefix = config.prefix;
 
-    
+    var servers = {};
 
 
+function play(connection, msg){
+  var server = servers[msg.guild.id];
 
-	
+  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
+
+  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
+
+  server.queue.shift();
+
+  server.dispatcher.on("end", function() {
+    if (server.queue[0]) play(connection, msg);
+    else connection.disconnect();
+  });
+}
 // Executed when the bot is ready!
 client.on('ready', () => {
     // Console output for showing that the bot is running.
@@ -82,32 +94,25 @@ client.on('message', async(message) => {
     }
 
 
-    if(command === "invites"){
-        /* invites.then(function (a) {
-            console.log(a.filter(invite => !invite.maxAge).first().toString());
-        }); */
-        try {
-            const invites = await message.guild.fetchInvites();
-            message.author.send(invites.filter(invite => !invite.maxAge).first().toString());
-        } catch(err){
-            message.delete();
-            message.author.send("No invite link found! Create one yourself in Discord.")
-        }
-    }
-
-
-  if (command === 'testconnection') {
+    client.on('message', msg => {
+  console.log('LOG: S: ' + msg.guild.name + ' M: ' + msg.content + ' Y: ' + msg.author.tag);
+  if (msg.author.id === ayarlar.id) return;
+  if (msg.author.bot) return;
+  if (!msg.content.startsWith(prefix)){
+		return;
+	}
+  if (msg.content.toLowerCase() === prefix + 'testconnection') {
     msg.reply('connectiontested!');
   }
-  if (command ===  ''){
+  if (msg.content.toLowerCase() === prefix + ''){
 
   }
-    if (command === 'help') {
+    if (msg.content.toLowerCase() === prefix + 'help') {
     msg.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
 	msg.reply('New Commands will be added soon: Our website: ');
   }
 
-   var args = msg.content.substring(config.prefix.length).split(" ")
+   var args = msg.content.substring(ayarlar.prefix.length).split(" ")
   switch (args[0].toLowerCase()) {
 
   case "play":
@@ -155,22 +160,11 @@ play(connection, msg);
   if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
   break;
   default:
+
+
+
+}
 });
-	var servers = {};
-	
-function play(connection, msg){
-  var server = servers[msg.guild.id];
-
-  server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
-
-  msg.channel.sendMessage(':headphones: Song is playing now(or adding to queue)!')
-
-  server.queue.shift();
-
-  server.dispatcher.on("end", function() {
-    if (server.queue[0]) play(connection, msg);
-    else connection.disconnect();
-  });
 // Change it to config.token when you want to use this project for public usages.
 //
 // prv_config is only for personal usage or when youre forking this project,
