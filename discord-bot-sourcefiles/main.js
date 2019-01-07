@@ -108,18 +108,18 @@ client.on('message', async(message) => {
     }
 
 
-  if (msg.content.toLowerCase() === prefix + 'testconnection') {
+  if (msg.content === 'testconnection') {
     msg.reply('connectiontested!');
   }
-  if (msg.content.toLowerCase() === prefix + ''){
+  if (msg.content ===  ''){
 
   }
-    if (msg.content.toLowerCase() === prefix + 'help') {
+    if (msg.content === 'help') {
     msg.reply('play +linkofvideo --> plays a muic you must enter the link not the name!' + 'write stop to stop the music');
 	msg.reply('New Commands will be added soon: Our website: ');
   }
 
-   var args = msg.content.substring(ayarlar.prefix.length).split(" ")
+   var args = msg.content.substring(config.prefix.length).split(" ")
   switch (args[0].toLowerCase()) {
 
   case "play":
