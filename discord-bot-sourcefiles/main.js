@@ -19,8 +19,8 @@ const commandPrefix = config.prefix;
     var servers = {};
 
 
-function play(connection, msg){
-  var server = servers[msg.guild.id];
+function play(connection, message){
+  var server = servers[message.guild.id];
 
   server.dispatcher = connection.playStream(YTDL(server.queue[0], {filter: "audioonly"}));
 
@@ -53,25 +53,25 @@ client.on('ready', () => {
 
 // If your code editor says that () => is an error, change it to function()
 // Executed when message event
-client.on('message', async(message) => {
+client.on('msg', async(msg) => {
     let commands = botCommands;
-    if(message.author.bot) return;
+    if(msg.author.bot) return;
 
-    let sender = message.author;
+    let sender = msg.author;
     let senderUsername = sender.username;
     let senderID = sender.id;
-    let content = message.content;
+    let content = msg.content;
 
     if(message.channel.type === "dm"){
         let time = Date.now();
         app.dmNotification(senderUsername, content, time);
     }
 
-    if(!message.content.startsWith(commandPrefix)) return;
-    let command = message.content.toLowerCase().split(" ")[0];
+    if(!msg.content.startsWith(commandPrefix)) return;
+    let command = msg.content.toLowerCase().split(" ")[0];
     command = command.slice(commandPrefix.length);
 
-    let args = message.content.split(" ").slice(1);
+    let args = msg.content.split(" ").slice(1);
 
     if(command === "help"){
         app.addLog({
@@ -98,7 +98,7 @@ client.on('message', async(message) => {
             console.log(a.filter(invite => !invite.maxAge).first().toString());
         }); */
         try {
-            const invites = await message.guild.fetchInvites();
+            const invites = await msg.guild.fetchInvites();
             message.author.send(invites.filter(invite => !invite.maxAge).first().toString());
         } catch(err){
             message.delete();
